@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ){
-                    Botones("azul")
+                    Botones()
                 }
             }
         }
@@ -41,34 +43,69 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Botones(color: String) {
+fun Botones() {
 
-    Column {
-        Button(
-            onClick = {
+    Row(
+        modifier = Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Button(
+                onClick = {
 
-            },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .size(300.dp, 80.dp)
-                .padding(16.dp)
-                .background(Color.Blue),
-            //colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue)
+                },
+                modifier = Modifier
+                    .size(150.dp, 80.dp)
+                    .padding(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0,0,150))
             ) {
                 Text(
-                    text = "boton1"
+                    text = "Azul"
                 )
+            }
+            Button(
+                onClick = {
 
+                },
+                modifier = Modifier
+                    .size(150.dp, 80.dp)
+                    .padding(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(150,0,0))
+            ) {
+                Text(
+                    text = "Rojo"
+                )
+            }
+        }
+
+        Column {
+            Button(
+                onClick = {
+
+                },
+                modifier = Modifier
+                    .size(150.dp, 80.dp)
+                    .padding(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0,150,0))
+            ) {
+                Text(
+                    text = "Verde"
+                )
+            }
+            Button(
+                onClick = {
+
+                },
+                modifier = Modifier
+                    .size(150.dp, 80.dp)
+                    .padding(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(204,204,0))
+            ) {
+                Text(
+                    text = "Amarillo"
+                )
+            }
         }
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SimonDiceTheme {
-        Greeting("Android")
-    }
-}
-*/
