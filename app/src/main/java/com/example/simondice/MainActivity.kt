@@ -1,3 +1,6 @@
+// enum - data class - mutableList - remember
+
+
 package com.example.simondice
 
 import android.os.Bundle
@@ -52,7 +55,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-enum class Colores { AZUL, ROJO, VERDE, AMARILLO }
+enum class Colores(val r: Int, val g: Int, val b: Int) {
+    AZUL(0, 0 , 150),
+    ROJO(150, 0,0),
+    VERDE(0, 150, 0),
+    AMARILLO(204, 204, 0)
+}
 
 @Composable
 fun SimonDice() {
@@ -94,7 +102,7 @@ fun Botones() {
                 modifier = Modifier
                     .aspectRatio(0.8f)
                     .padding(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0,0,150)),
+                colors = ButtonDefaults.buttonColors(containerColor = Colores.AZUL),
                 shape = RectangleShape,
             ) {
                 Text(
