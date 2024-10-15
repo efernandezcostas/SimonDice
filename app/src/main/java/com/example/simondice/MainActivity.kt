@@ -1,13 +1,24 @@
-// enum - data class - mutableList - remember
+// *enum - data class - mutableList - remember
+
+/*
+ Rama nueva
+ Secuencia 5 numeros random entre 1-4
+ Toast muestra la secuencia entera
+ El usuario marca la secuencia
+ Se comprueba en cada click
+    si falla toast game over
+    si llega al final toast win
+ */
 
 
 package com.example.simondice
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,17 +26,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.simondice.ui.theme.SimonDiceTheme
+import kotlin.random.Random
 
 
 class MainActivity : ComponentActivity() {
@@ -48,29 +57,42 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ){
-                    Botones()
+                    val secuenciaJuego = remember { mutableListOf<Int>() }
+                    InterfazBotones(secuenciaJuego)
                 }
             }
         }
+
+        val text = "Esto es un toast"
+        val duracion = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(this, text, duracion)
+        toast.show()
     }
 }
 
-enum class Colores(val r: Int, val g: Int, val b: Int) {
-    AZUL(0, 0 , 150),
-    ROJO(150, 0,0),
-    VERDE(0, 150, 0),
-    AMARILLO(204, 204, 0)
+enum class Colores(val color: Color, val nombre: String, val id: Int) {
+    AZUL(Color(59, 59, 197, 255), "Azul", 1),
+    ROJO(Color(180, 0, 0, 255), "Rojo", 2),
+    VERDE(Color(5, 162, 5, 255), "Verde", 3),
+    AMARILLO(Color(207, 207, 28, 255), "Amarillo", 4)
 }
 
-@Composable
-fun SimonDice() {
+fun comprobarAciertos(listaJuego: MutableList<Int>, listaJugador: MutableList<Int>) {
 
 }
 
+//fun crearSecuenciaJuego(lista: MutableList<Int>) {
+//    lista.add(Random.nextInt(1,5))
+//}
+
 @Composable
-fun Botones() {
-    var listaColores = null
-    var puntuacion by remember { mutableIntStateOf(0) }
+fun InterfazBotones(secuenciaJuego: MutableList<Int>) {
+    secuenciaJuego.add(Random.nextInt(1,5))
+
+
+    val secuenciaJugador = remember { mutableListOf<Int>() }
+    val puntuacion by remember { mutableIntStateOf(0) }
 
     Row(
         modifier = Modifier
@@ -97,27 +119,28 @@ fun Botones() {
         ) {
             Button(
                 onClick = {
-                    puntuacion++
+                    secuenciaJugador.add(Colores.AZUL.id)
+                    Log.d("Secuencia", secuenciaJuego.toString())
                 },
                 modifier = Modifier
                     .aspectRatio(0.8f)
                     .padding(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Colores.AZUL),
+                colors = ButtonDefaults.buttonColors(containerColor = Colores.AZUL.color),
                 shape = RectangleShape,
             ) {
                 Text(
-                    text = "Azul",
+                    text = Colores.AZUL.nombre,
                     fontSize = 20.sp
                 )
             }
             Button(
                 onClick = {
-                    puntuacion--
+                    secuenciaJuego.add(Random.nextInt(1,5))
                 },
                 modifier = Modifier
                     .aspectRatio(0.8f)
                     .padding(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(150,0,0)),
+                colors = ButtonDefaults.buttonColors(containerColor = Colores.ROJO.color),
                 shape = RectangleShape,
             ) {
                 Text(
@@ -132,12 +155,12 @@ fun Botones() {
         ) {
             Button(
                 onClick = {
-
+                    secuenciaJuego.add(Random.nextInt(1,5))
                 },
                 modifier = Modifier
                     .aspectRatio(0.8f)
                     .padding(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0,150,0)),
+                colors = ButtonDefaults.buttonColors(containerColor = Colores.VERDE.color),
                 shape = RectangleShape,
             ) {
                 Text(
@@ -152,7 +175,7 @@ fun Botones() {
                 modifier = Modifier
                     .aspectRatio(0.8f)
                     .padding(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(204,204,0)),
+                colors = ButtonDefaults.buttonColors(containerColor = Colores.AMARILLO.color),
                 shape = RectangleShape,
             ) {
                 Text(
@@ -168,7 +191,7 @@ fun Botones() {
         verticalAlignment = Alignment.Bottom
     ){
         Button(
-            onClick = { puntuacion = 0 },
+            onClick = {  },
             modifier = Modifier
                 .padding(16.dp)
                 .aspectRatio(4f)
