@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.simondice.ui.theme.SimonDiceTheme
@@ -58,6 +59,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ){
                     val secuenciaJuego = remember { mutableListOf<Int>() }
+                    //crearSecuenciaJuego(secuenciaJuego)
+                    //Log.d("Secuencia", secuenciaJuego.toString())
                     InterfazBotones(secuenciaJuego)
                 }
             }
@@ -82,14 +85,26 @@ fun comprobarAciertos(listaJuego: MutableList<Int>, listaJugador: MutableList<In
 
 }
 
-//fun crearSecuenciaJuego(lista: MutableList<Int>) {
-//    lista.add(Random.nextInt(1,5))
-//}
+fun crearSecuenciaJuego(lista: MutableList<Int>) {
+    for (i in 1..5) {
+        lista.add(Random.nextInt(1, 5))
+    }
+}
+
 
 @Composable
 fun InterfazBotones(secuenciaJuego: MutableList<Int>) {
-    secuenciaJuego.add(Random.nextInt(1,5))
+    for (i in 1..5){
+        var numero = Random.nextInt(1,5)
+        val color1 = Colores.values().find { it.id == numero }
+        Log.d("Secuencia2", color1.toString())
 
+        //secuenciaJuego.add(Colores.values().get(numero).id)
+
+        //secuenciaJuego.add(Random.nextInt(1,5))
+    }
+
+    //val secuenciaEnColores
 
     val secuenciaJugador = remember { mutableListOf<Int>() }
     val puntuacion by remember { mutableIntStateOf(0) }
