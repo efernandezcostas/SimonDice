@@ -1,6 +1,5 @@
 package com.example.simondice
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -121,15 +120,11 @@ fun UI(miModelView: ModelView) {
                         if (!empezarSecuencia && !empezarRespuesta){
                             numeroSecuencia++
 
-                            if (secuenciaColores.size>numeroSecuencia){
+                            if (secuenciaColores.size>=numeroSecuencia){
                                 secuenciaUsuario.add(Colores.AZUL)
                                 colorSecuenciaActual = Colores.AZUL.color
                                 empezarRespuesta = true
-                            } else if (secuenciaColores.size==numeroSecuencia){
-                                secuenciaUsuario.add(Colores.AZUL)
-                                colorSecuenciaActual = Colores.AZUL.color
-                                empezarRespuesta = true
-                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                                miModelView.comprobarSecuencia(numeroSecuencia, secuenciaColores, secuenciaUsuario)
                             } else {
                                 numeroSecuencia--
                             }
@@ -142,15 +137,11 @@ fun UI(miModelView: ModelView) {
                         if (!empezarSecuencia && !empezarRespuesta){
                             numeroSecuencia++
 
-                            if (secuenciaColores.size>numeroSecuencia){
+                            if (secuenciaColores.size>=numeroSecuencia){
                                 secuenciaUsuario.add(Colores.VERDE)
                                 colorSecuenciaActual = Colores.VERDE.color
                                 empezarRespuesta = true
-                            } else if (secuenciaColores.size==numeroSecuencia){
-                                secuenciaUsuario.add(Colores.VERDE)
-                                colorSecuenciaActual = Colores.VERDE.color
-                                empezarRespuesta = true
-                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                                miModelView.comprobarSecuencia(numeroSecuencia, secuenciaColores, secuenciaUsuario)
                             } else {
                                 numeroSecuencia--
                             }
@@ -166,38 +157,15 @@ fun UI(miModelView: ModelView) {
                         if (!empezarSecuencia && !empezarRespuesta){
                             numeroSecuencia++
 
-                            if (secuenciaColores.size>numeroSecuencia){
+                            if (secuenciaColores.size>=numeroSecuencia){
                                 secuenciaUsuario.add(Colores.ROJO)
                                 colorSecuenciaActual = Colores.ROJO.color
                                 empezarRespuesta = true
-                            } else if (secuenciaColores.size==numeroSecuencia){
-                                secuenciaUsuario.add(Colores.ROJO)
-                                colorSecuenciaActual = Colores.ROJO.color
-                                empezarRespuesta = true
-                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                                miModelView.comprobarSecuencia(numeroSecuencia, secuenciaColores, secuenciaUsuario)
                             } else {
                                 numeroSecuencia--
                             }
                         }
-
-                        /*
-                        if (!empezarSecuencia && !empezarRespuesta) {
-                            colorSecuenciaActual = Colores.AMARILLO.color
-                            secuenciaUsuario.add(Colores.AMARILLO)
-                            empezarRespuesta = true
-
-                            Log.d("Secuencia", secuenciaUsuario.toString())
-                            if (secuenciaColores.isNotEmpty() && secuenciaUsuario[numeroSecuencia] == secuenciaColores[numeroSecuencia]){
-                                Log.d("Secuencia", "Bien")
-                            } else {
-                                Log.d("Secuencia", "Mal")
-                            }
-
-                            if (secuenciaColores.size > numeroSecuencia){
-                                numeroSecuencia++
-                            }
-                        }
-                         */
                     }
                 )
                 MiBoton(
@@ -206,16 +174,11 @@ fun UI(miModelView: ModelView) {
                         if (!empezarSecuencia && !empezarRespuesta){
                             numeroSecuencia++
 
-                            if (secuenciaColores.size>numeroSecuencia){
+                            if (secuenciaColores.size>=numeroSecuencia){
                                 secuenciaUsuario.add(Colores.AMARILLO)
                                 colorSecuenciaActual = Colores.AMARILLO.color
                                 empezarRespuesta = true
-                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
-                            } else if (secuenciaColores.size==numeroSecuencia){
-                                secuenciaUsuario.add(Colores.AMARILLO)
-                                colorSecuenciaActual = Colores.AMARILLO.color
-                                empezarRespuesta = true
-                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                                miModelView.comprobarSecuencia(numeroSecuencia, secuenciaColores, secuenciaUsuario)
                             } else {
                                 numeroSecuencia--
                             }
@@ -230,7 +193,7 @@ fun UI(miModelView: ModelView) {
         Row {
             Button(
                 onClick = {
-                    if (!empezarSecuencia) {
+                    if (!empezarSecuencia && !empezarRespuesta) {
                         miModelView.crearRandom()
                         when(Datos.numero){
                             1 -> secuenciaColores.add(Colores.AZUL)
@@ -241,26 +204,8 @@ fun UI(miModelView: ModelView) {
 
                         empezarSecuencia = true
                         numeroSecuencia = 0
-                    }
-
-                    /*
-                    if (!empezarSecuencia && !empezarRespuesta) {
                         secuenciaUsuario.clear()
-                        colorSecuenciaActual = Color.White
-                        var numeroRandom = Random.nextInt(1, 5)
-                        when (numeroRandom) {
-                            1 -> secuenciaColores.add(Colores.AZUL)
-                            2 -> secuenciaColores.add(Colores.ROJO)
-                            3 -> secuenciaColores.add(Colores.VERDE)
-                            4 -> secuenciaColores.add(Colores.AMARILLO)
-                        }
-                        Log.d("Secuencia", secuenciaColores.toString())
-
-                        empezarSecuencia = true
-                        colorSecuenciaActual = Color.White
-                        numeroSecuencia = 0
                     }
-                     */
                 },
                 modifier = Modifier
                     .border(color = Color.Black, width = 1.dp)

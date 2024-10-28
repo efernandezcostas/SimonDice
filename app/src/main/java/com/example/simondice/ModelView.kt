@@ -1,6 +1,7 @@
 package com.example.simondice
 
 import android.util.Log
+import androidx.compose.runtime.MutableIntState
 import androidx.lifecycle.ViewModel
 
 
@@ -19,19 +20,11 @@ class ModelView: ViewModel() {
         Log.d("Numero", Datos.numero.toString())
     }
 
-    fun comprobarSecuencia(secuenciaColores: MutableList<Colores>, secuenciaUsuario: MutableList<Colores>): String{
-
-        var resultado = false
-
-
-
-        for (i in 0 until secuenciaColores.size){
-            if (secuenciaColores[i] == secuenciaUsuario[i]){
-                continue
-            } else {
-                resultado = false
-            }
+    fun comprobarSecuencia(numeroSecuencia: Int, secuenciaColores: MutableList<Colores>, secuenciaUsuario: MutableList<Colores>) {
+        if (secuenciaColores[numeroSecuencia-1] == secuenciaUsuario[numeroSecuencia-1]){
+            Log.d("Secuencia","Ganaste "+secuenciaColores[numeroSecuencia-1]+" "+secuenciaUsuario[numeroSecuencia-1]+" "+(numeroSecuencia-1))
+        } else {
+            Log.d("Secuencia","Perdiste "+secuenciaColores[numeroSecuencia-1]+" "+secuenciaUsuario[numeroSecuencia-1]+" "+(numeroSecuencia-1))
         }
-        return "Ganaste"
     }
 }
