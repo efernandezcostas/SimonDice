@@ -1,20 +1,37 @@
 package com.example.simondice
 
 import android.util.Log
+import androidx.lifecycle.ViewModel
 
 
-class ModelView {
+class ModelView: ViewModel() {
 
-    var numeroRandom = 0
+    private var _numeroRandom = 0
 
     fun crearRandom(){
-        numeroRandom = (1..4).random()
+        _numeroRandom = (1..4).random()
         actualizarNumero()
-        Log.d("Numero", numeroRandom.toString())
+        Log.d("Numero", _numeroRandom.toString())
     }
 
     fun actualizarNumero(){
-        Datos.numero = numeroRandom
+        Datos.numero = _numeroRandom
         Log.d("Numero", Datos.numero.toString())
+    }
+
+    fun comprobarSecuencia(secuenciaColores: MutableList<Colores>, secuenciaUsuario: MutableList<Colores>): String{
+
+        var resultado = false
+
+
+
+        for (i in 0 until secuenciaColores.size){
+            if (secuenciaColores[i] == secuenciaUsuario[i]){
+                continue
+            } else {
+                resultado = false
+            }
+        }
+        return "Ganaste"
     }
 }

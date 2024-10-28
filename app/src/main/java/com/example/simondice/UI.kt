@@ -1,6 +1,6 @@
 package com.example.simondice
 
-import android.graphics.ColorSpace.Model
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -51,11 +51,11 @@ fun MiBoton(color: Colores, onClick2: () -> Unit) {
 }
 
 @Composable
-fun InterfazGrafica(miModelView: ModelView) {
+fun UI(miModelView: ModelView) {
     var quienDice by remember { mutableStateOf("Simón Dice") }
 
-    var secuenciaColores by remember { mutableStateOf(mutableListOf<Colores>()) }
     var colorSecuenciaActual by remember { mutableStateOf(Color.White) }
+    var secuenciaColores by remember { mutableStateOf(mutableListOf<Colores>()) }
     var secuenciaUsuario by remember { mutableStateOf(mutableListOf<Colores>()) }
     var numeroSecuencia by remember { mutableIntStateOf(0) }
 
@@ -118,49 +118,43 @@ fun InterfazGrafica(miModelView: ModelView) {
                 MiBoton(
                     Colores.AZUL,
                     onClick2 = {
-                        miModelView.crearRandom()
-                        /*
-                    if (!empezarSecuencia && !empezarRespuesta) {
-                        colorSecuenciaActual = Colores.AZUL.color
-                        secuenciaUsuario.add(Colores.AZUL)
-                        empezarRespuesta = true
-
-                        Log.d("Secuencia", secuenciaUsuario.toString())
-
-                        if (secuenciaColores.isNotEmpty() && secuenciaUsuario[numeroSecuencia] == secuenciaColores[numeroSecuencia]) {
-                            Log.d("Secuencia", "Bien")
-                        } else {
-                            Log.d("Secuencia", "Mal")
-                        }
-
-                        if (secuenciaColores.size > numeroSecuencia) {
+                        if (!empezarSecuencia && !empezarRespuesta){
                             numeroSecuencia++
+
+                            if (secuenciaColores.size>numeroSecuencia){
+                                secuenciaUsuario.add(Colores.AZUL)
+                                colorSecuenciaActual = Colores.AZUL.color
+                                empezarRespuesta = true
+                            } else if (secuenciaColores.size==numeroSecuencia){
+                                secuenciaUsuario.add(Colores.AZUL)
+                                colorSecuenciaActual = Colores.AZUL.color
+                                empezarRespuesta = true
+                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                            } else {
+                                numeroSecuencia--
+                            }
                         }
-                    }
-                     */
                     }
                 )
                 MiBoton(
                     Colores.VERDE,
                     onClick2 = {
-                        /*
-                    if (!empezarSecuencia && !empezarRespuesta) {
-                        colorSecuenciaActual = Colores.VERDE.color
-                        secuenciaUsuario.add(Colores.VERDE)
-                        empezarRespuesta = true
-
-                        Log.d("Secuencia", secuenciaUsuario.toString())
-                        if (secuenciaColores.isNotEmpty() && secuenciaUsuario[numeroSecuencia] == secuenciaColores[numeroSecuencia]){
-                            Log.d("Secuencia", "Bien")
-                        } else {
-                            Log.d("Secuencia", "Mal")
-                        }
-
-                        if (secuenciaColores.size > numeroSecuencia){
+                        if (!empezarSecuencia && !empezarRespuesta){
                             numeroSecuencia++
+
+                            if (secuenciaColores.size>numeroSecuencia){
+                                secuenciaUsuario.add(Colores.VERDE)
+                                colorSecuenciaActual = Colores.VERDE.color
+                                empezarRespuesta = true
+                            } else if (secuenciaColores.size==numeroSecuencia){
+                                secuenciaUsuario.add(Colores.VERDE)
+                                colorSecuenciaActual = Colores.VERDE.color
+                                empezarRespuesta = true
+                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                            } else {
+                                numeroSecuencia--
+                            }
                         }
-                    }
-                     */
                     }
                 )
             }
@@ -169,46 +163,63 @@ fun InterfazGrafica(miModelView: ModelView) {
                 MiBoton(
                     Colores.ROJO,
                     onClick2 = {
-                        /*
-                    if (!empezarSecuencia && !empezarRespuesta) {
-                        colorSecuenciaActual = Colores.ROJO.color
-                        secuenciaUsuario.add(Colores.ROJO)
-                        empezarRespuesta = true
-
-                        Log.d("Secuencia", secuenciaUsuario.toString())
-                        if (secuenciaColores.isNotEmpty() && secuenciaUsuario[numeroSecuencia] == secuenciaColores[numeroSecuencia]){
-                            Log.d("Secuencia", "Bien")
-                        } else {
-                            Log.d("Secuencia", "Mal")
-                        }
-
-                        if (secuenciaColores.size > numeroSecuencia){
+                        if (!empezarSecuencia && !empezarRespuesta){
                             numeroSecuencia++
+
+                            if (secuenciaColores.size>numeroSecuencia){
+                                secuenciaUsuario.add(Colores.ROJO)
+                                colorSecuenciaActual = Colores.ROJO.color
+                                empezarRespuesta = true
+                            } else if (secuenciaColores.size==numeroSecuencia){
+                                secuenciaUsuario.add(Colores.ROJO)
+                                colorSecuenciaActual = Colores.ROJO.color
+                                empezarRespuesta = true
+                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                            } else {
+                                numeroSecuencia--
+                            }
                         }
-                    }
-                     */
+
+                        /*
+                        if (!empezarSecuencia && !empezarRespuesta) {
+                            colorSecuenciaActual = Colores.AMARILLO.color
+                            secuenciaUsuario.add(Colores.AMARILLO)
+                            empezarRespuesta = true
+
+                            Log.d("Secuencia", secuenciaUsuario.toString())
+                            if (secuenciaColores.isNotEmpty() && secuenciaUsuario[numeroSecuencia] == secuenciaColores[numeroSecuencia]){
+                                Log.d("Secuencia", "Bien")
+                            } else {
+                                Log.d("Secuencia", "Mal")
+                            }
+
+                            if (secuenciaColores.size > numeroSecuencia){
+                                numeroSecuencia++
+                            }
+                        }
+                         */
                     }
                 )
                 MiBoton(
                     Colores.AMARILLO,
                     onClick2 = {
-                        /*
-                    if (!empezarSecuencia && !empezarRespuesta) {
-                        colorSecuenciaActual = Colores.AMARILLO.color
-                        secuenciaUsuario.add(Colores.AMARILLO)
-                        empezarRespuesta = true
-
-                        Log.d("Secuencia", secuenciaUsuario.toString())
-                        if (secuenciaColores.isNotEmpty() && secuenciaUsuario[numeroSecuencia] == secuenciaColores[numeroSecuencia]){
-                            Log.d("Secuencia", "Bien")
-                        } else {
-                            Log.d("Secuencia", "Mal")
-                        }
-
-                        if (secuenciaColores.size > numeroSecuencia){
+                        if (!empezarSecuencia && !empezarRespuesta){
                             numeroSecuencia++
+
+                            if (secuenciaColores.size>numeroSecuencia){
+                                secuenciaUsuario.add(Colores.AMARILLO)
+                                colorSecuenciaActual = Colores.AMARILLO.color
+                                empezarRespuesta = true
+                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                            } else if (secuenciaColores.size==numeroSecuencia){
+                                secuenciaUsuario.add(Colores.AMARILLO)
+                                colorSecuenciaActual = Colores.AMARILLO.color
+                                empezarRespuesta = true
+                                quienDice = miModelView.comprobarSecuencia(secuenciaColores, secuenciaUsuario)
+                            } else {
+                                numeroSecuencia--
+                            }
                         }
-                    }*/
                     }
                 )
             }
@@ -219,24 +230,37 @@ fun InterfazGrafica(miModelView: ModelView) {
         Row {
             Button(
                 onClick = {
-                    /*
-                if (!empezarSecuencia && !empezarRespuesta) {
-                    secuenciaUsuario.clear()
-                    colorSecuenciaActual = Color.White
-                    var numeroRandom = Random.nextInt(1, 5)
-                    when (numeroRandom) {
-                        1 -> secuenciaColores.add(Colores.AZUL)
-                        2 -> secuenciaColores.add(Colores.ROJO)
-                        3 -> secuenciaColores.add(Colores.VERDE)
-                        4 -> secuenciaColores.add(Colores.AMARILLO)
-                    }
-                    Log.d("Secuencia", secuenciaColores.toString())
+                    if (!empezarSecuencia) {
+                        miModelView.crearRandom()
+                        when(Datos.numero){
+                            1 -> secuenciaColores.add(Colores.AZUL)
+                            2 -> secuenciaColores.add(Colores.ROJO)
+                            3 -> secuenciaColores.add(Colores.VERDE)
+                            4 -> secuenciaColores.add(Colores.AMARILLO)
+                        }
 
-                    empezarSecuencia = true
-                    colorSecuenciaActual = Color.White
-                    numeroSecuencia = 0
-                }
-                */
+                        empezarSecuencia = true
+                        numeroSecuencia = 0
+                    }
+
+                    /*
+                    if (!empezarSecuencia && !empezarRespuesta) {
+                        secuenciaUsuario.clear()
+                        colorSecuenciaActual = Color.White
+                        var numeroRandom = Random.nextInt(1, 5)
+                        when (numeroRandom) {
+                            1 -> secuenciaColores.add(Colores.AZUL)
+                            2 -> secuenciaColores.add(Colores.ROJO)
+                            3 -> secuenciaColores.add(Colores.VERDE)
+                            4 -> secuenciaColores.add(Colores.AMARILLO)
+                        }
+                        Log.d("Secuencia", secuenciaColores.toString())
+
+                        empezarSecuencia = true
+                        colorSecuenciaActual = Color.White
+                        numeroSecuencia = 0
+                    }
+                     */
                 },
                 modifier = Modifier
                     .border(color = Color.Black, width = 1.dp)
@@ -261,6 +285,6 @@ fun InterfazGrafica(miModelView: ModelView) {
 @Composable
 fun InterfazGraficaPreview() {
     SimonDiceTheme {
-        InterfazGrafica(ModelView())
+        UI(ModelView())
     }
 }

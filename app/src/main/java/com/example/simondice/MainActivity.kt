@@ -34,10 +34,12 @@ import com.example.simondice.ui.theme.SimonDiceTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val miModelView = ModelView()
+
         setContent {
             SimonDiceTheme {
-                val miModelView = ModelView()
-                InterfazGrafica(miModelView)
+                UI(miModelView)
             }
         }
     }
