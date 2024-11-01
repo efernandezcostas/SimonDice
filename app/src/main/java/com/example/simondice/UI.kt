@@ -1,5 +1,6 @@
 package com.example.simondice
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,9 +32,41 @@ import com.example.simondice.ui.theme.SimonDiceTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun MiBoton(color: Colores, onClick2: () -> Unit) {
+fun MiBoton(
+    miModelView: ModelView,
+    color: Colores,
+    empezarRespuesta: Boolean,
+    setEmpezarRespuesta: (Boolean) -> Unit,
+    empezarSecuencia: Boolean,
+    secuenciaCompleta: Boolean,
+    setSecuenciaCompleta: (Boolean) -> Unit,
+    setColorSecuenciaActual: (Color) -> Unit,
+    setQuienDice: (String) -> Unit,
+) {
     return Button(
-        onClick = onClick2,
+        onClick = {
+            if (!empezarSecuencia
+                && !empezarRespuesta
+                && !secuenciaCompleta
+                && Datos.secuenciaMaquina.isNotEmpty()
+            ){
+                setColorSecuenciaActual(color.color)
+                setEmpezarRespuesta(true)
+
+                var secuenciaCompletaLocal = false
+                var respuestaCorrecta = miModelView.respuestaUsuario(color, setSecuenciaCompletaLocal = {secuenciaCompletaLocal = it})
+
+                if (!respuestaCorrecta) {
+                    setQuienDice("Has perdido")
+                    miModelView.nuevaPartida()
+                } else if (secuenciaCompletaLocal) {
+                    setQuienDice("Has ganado")
+                    setSecuenciaCompleta(true)
+                }
+            }
+            Log.d("Secuencia", Datos.secuenciaMaquina.toString()+" - "+Datos.secuenciaUsuario.toString())
+
+        },
         modifier = Modifier
             .padding(10.dp, 10.dp)
             .size(160.dp, 200.dp),
@@ -54,18 +86,16 @@ fun UI(miModelView: ModelView) {
     var quienDice by remember { mutableStateOf("Simón Dice") }
 
     var colorSecuenciaActual by remember { mutableStateOf(Color.White) }
-    var secuenciaColores by remember { mutableStateOf(mutableListOf<Colores>()) }
-    var secuenciaUsuario by remember { mutableStateOf(mutableListOf<Colores>()) }
-    var numeroSecuencia by remember { mutableIntStateOf(0) }
 
     var empezarRespuesta by remember { mutableStateOf(false) }
     var empezarSecuencia by remember { mutableStateOf(false) }
+    var secuenciaCompleta by remember { mutableStateOf(true) }
 
     LaunchedEffect(empezarSecuencia) {
         if (empezarSecuencia) {
             quienDice = "Simón Dice"
 
-            for (color in secuenciaColores) {
+            for (color in Datos.secuenciaMaquina) {
                 colorSecuenciaActual = color.color
                 delay(1000)
                 colorSecuenciaActual = Color.White
@@ -115,75 +145,51 @@ fun UI(miModelView: ModelView) {
         Row {
             Column {
                 MiBoton(
-                    Colores.AZUL,
-                    onClick2 = {
-                        if (!empezarSecuencia && !empezarRespuesta){
-                            numeroSecuencia++
-
-                            if (secuenciaColores.size>=numeroSecuencia){
-                                secuenciaUsuario.add(Colores.AZUL)
-                                colorSecuenciaActual = Colores.AZUL.color
-                                empezarRespuesta = true
-                                miModelView.comprobarSecuencia(numeroSecuencia, secuenciaColores, secuenciaUsuario)
-                            } else {
-                                numeroSecuencia--
-                            }
-                        }
-                    }
+                    miModelView = miModelView,
+                    color = Colores.AZUL,
+                    empezarRespuesta = empezarRespuesta,
+                    empezarSecuencia = empezarSecuencia,
+                    secuenciaCompleta = secuenciaCompleta,
+                    setColorSecuenciaActual = {colorSecuenciaActual = it},
+                    setEmpezarRespuesta = {empezarRespuesta = it},
+                    setQuienDice = {quienDice = it},
+                    setSecuenciaCompleta = {secuenciaCompleta = it}
                 )
                 MiBoton(
-                    Colores.VERDE,
-                    onClick2 = {
-                        if (!empezarSecuencia && !empezarRespuesta){
-                            numeroSecuencia++
-
-                            if (secuenciaColores.size>=numeroSecuencia){
-                                secuenciaUsuario.add(Colores.VERDE)
-                                colorSecuenciaActual = Colores.VERDE.color
-                                empezarRespuesta = true
-                                miModelView.comprobarSecuencia(numeroSecuencia, secuenciaColores, secuenciaUsuario)
-                            } else {
-                                numeroSecuencia--
-                            }
-                        }
-                    }
+                    miModelView = miModelView,
+                    color = Colores.VERDE,
+                    empezarRespuesta = empezarRespuesta,
+                    empezarSecuencia = empezarSecuencia,
+                    secuenciaCompleta = secuenciaCompleta,
+                    setColorSecuenciaActual = {colorSecuenciaActual = it},
+                    setEmpezarRespuesta = {empezarRespuesta = it},
+                    setQuienDice = {quienDice = it},
+                    setSecuenciaCompleta = {secuenciaCompleta = it}
                 )
             }
 
             Column {
                 MiBoton(
-                    Colores.ROJO,
-                    onClick2 = {
-                        if (!empezarSecuencia && !empezarRespuesta){
-                            numeroSecuencia++
-
-                            if (secuenciaColores.size>=numeroSecuencia){
-                                secuenciaUsuario.add(Colores.ROJO)
-                                colorSecuenciaActual = Colores.ROJO.color
-                                empezarRespuesta = true
-                                miModelView.comprobarSecuencia(numeroSecuencia, secuenciaColores, secuenciaUsuario)
-                            } else {
-                                numeroSecuencia--
-                            }
-                        }
-                    }
+                    miModelView = miModelView,
+                    color = Colores.ROJO,
+                    empezarRespuesta = empezarRespuesta,
+                    empezarSecuencia = empezarSecuencia,
+                    secuenciaCompleta = secuenciaCompleta,
+                    setColorSecuenciaActual = {colorSecuenciaActual = it},
+                    setEmpezarRespuesta = {empezarRespuesta = it},
+                    setQuienDice = {quienDice = it},
+                    setSecuenciaCompleta = {secuenciaCompleta = it}
                 )
                 MiBoton(
-                    Colores.AMARILLO,
-                    onClick2 = {
-                        if (!empezarSecuencia && !empezarRespuesta){
-                            numeroSecuencia++
-
-                            if (secuenciaColores.size>=numeroSecuencia){
-                                secuenciaUsuario.add(Colores.AMARILLO)
-                                colorSecuenciaActual = Colores.AMARILLO.color
-                                empezarRespuesta = true
-                                miModelView.comprobarSecuencia(numeroSecuencia, secuenciaColores, secuenciaUsuario)
-                            } else {
-                                numeroSecuencia--
-                            }
-                        }
-                    }
+                    miModelView = miModelView,
+                    color = Colores.AMARILLO,
+                    empezarRespuesta = empezarRespuesta,
+                    empezarSecuencia = empezarSecuencia,
+                    secuenciaCompleta = secuenciaCompleta,
+                    setColorSecuenciaActual = {colorSecuenciaActual = it},
+                    setEmpezarRespuesta = {empezarRespuesta = it},
+                    setQuienDice = {quienDice = it},
+                    setSecuenciaCompleta = {secuenciaCompleta = it}
                 )
             }
         }
@@ -194,17 +200,14 @@ fun UI(miModelView: ModelView) {
             Button(
                 onClick = {
                     if (!empezarSecuencia && !empezarRespuesta) {
-                        miModelView.crearRandom()
-                        when(Datos.numero){
-                            1 -> secuenciaColores.add(Colores.AZUL)
-                            2 -> secuenciaColores.add(Colores.ROJO)
-                            3 -> secuenciaColores.add(Colores.VERDE)
-                            4 -> secuenciaColores.add(Colores.AMARILLO)
+                        if (Datos.secuenciaMaquina.isNotEmpty() && !secuenciaCompleta) {
+                            quienDice = "Faltan colores"
+                        } else {
+                            miModelView.nuevaRonda()
+                            empezarSecuencia = true
+                            secuenciaCompleta = false
+                            Log.d("Secuencia", Datos.secuenciaMaquina.toString() + " - " + Datos.secuenciaUsuario.toString())
                         }
-
-                        empezarSecuencia = true
-                        numeroSecuencia = 0
-                        secuenciaUsuario.clear()
                     }
                 },
                 modifier = Modifier
