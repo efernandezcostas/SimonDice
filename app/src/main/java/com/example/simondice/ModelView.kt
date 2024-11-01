@@ -1,30 +1,36 @@
 package com.example.simondice
 
-import android.util.Log
-import androidx.compose.runtime.MutableIntState
 import androidx.lifecycle.ViewModel
 
 
 class ModelView: ViewModel() {
 
-    private var _numeroRandom = 0
-
-    fun crearRandom(){
-        _numeroRandom = (1..4).random()
-        actualizarNumero()
-        Log.d("Numero", _numeroRandom.toString())
-    }
-
-    fun actualizarNumero(){
-        Datos.numero = _numeroRandom
-        Log.d("Numero", Datos.numero.toString())
-    }
-
-    fun comprobarSecuencia(numeroSecuencia: Int, secuenciaColores: MutableList<Colores>, secuenciaUsuario: MutableList<Colores>) {
-        if (secuenciaColores[numeroSecuencia-1] == secuenciaUsuario[numeroSecuencia-1]){
-            Log.d("Secuencia","Ganaste "+secuenciaColores[numeroSecuencia-1]+" "+secuenciaUsuario[numeroSecuencia-1]+" "+(numeroSecuencia-1))
-        } else {
-            Log.d("Secuencia","Perdiste "+secuenciaColores[numeroSecuencia-1]+" "+secuenciaUsuario[numeroSecuencia-1]+" "+(numeroSecuencia-1))
+    /**
+     * Inicia una nueva ronda
+     */
+    fun nuevaRonda(){
+        Datos.numero = (1..4).random()
+        when (Datos.numero) {
+            1 -> Datos.secuenciaMaquina.add(Colores.AZUL)
+            2 -> Datos.secuenciaMaquina.add(Colores.ROJO)
+            3 -> Datos.secuenciaMaquina.add(Colores.VERDE)
+            4 -> Datos.secuenciaMaquina.add(Colores.AMARILLO)
         }
+        Datos.secuenciaUsuario.clear()
+    }
+
+    /**
+     * Añade el color seleccionado por el usuario a la secuencia del usuario
+     */
+    fun respuestaUsuario(color: Colores, setSecuenciaCompletaLocal: (Boolean) -> Unit): Boolean {
+        Datos.secuenciaUsuario.add(color)
+        if (Datos.secuenciaUsuario.size == Datos.secuenciaMaquina.size){
+            setSecuenciaCompletaLocal(true)
+        }
+        return Datos.secuenciaUsuario.last() == Datos.secuenciaMaquina[Datos.secuenciaUsuario.size - 1]
+    }
+
+    fun nuevaPartida(){
+        Datos.secuenciaMaquina.clear()
     }
 }
