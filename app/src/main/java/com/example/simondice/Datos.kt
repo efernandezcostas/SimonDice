@@ -1,18 +1,11 @@
 package com.example.simondice
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 
 object Datos {
     var numero = 0
-    /*
-    var secuenciaColores = mutableListOf<Colores>()
+    var secuenciaMaquina = mutableListOf<Colores>()
     var secuenciaUsuario = mutableListOf<Colores>()
-     */
 }
 
 enum class Colores (val color: Color, val nombre: String){
