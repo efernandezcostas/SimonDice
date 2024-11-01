@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,7 +61,7 @@ fun MiBoton(
                     setQuienDice("Has perdido")
                     miModelView.nuevaPartida()
                 } else if (secuenciaCompletaLocal) {
-                    setQuienDice("Has ganado")
+                    setQuienDice("Siguiente ronda")
                     setSecuenciaCompleta(true)
                 }
             }
@@ -90,6 +91,21 @@ fun UI(miModelView: ModelView) {
     var empezarRespuesta by remember { mutableStateOf(false) }
     var empezarSecuencia by remember { mutableStateOf(false) }
     var secuenciaCompleta by remember { mutableStateOf(true) }
+
+    @Composable
+    fun CrearMiBoton(color: Colores) {
+        MiBoton(
+            miModelView = miModelView,
+            color = color,
+            empezarRespuesta = empezarRespuesta,
+            setEmpezarRespuesta = { empezarRespuesta = it },
+            empezarSecuencia = empezarSecuencia,
+            secuenciaCompleta = secuenciaCompleta,
+            setColorSecuenciaActual = { colorSecuenciaActual = it },
+            setQuienDice = { quienDice = it },
+            setSecuenciaCompleta = { secuenciaCompleta = it }
+        )
+    }
 
     LaunchedEffect(empezarSecuencia) {
         if (empezarSecuencia) {
@@ -144,53 +160,12 @@ fun UI(miModelView: ModelView) {
 
         Row {
             Column {
-                MiBoton(
-                    miModelView = miModelView,
-                    color = Colores.AZUL,
-                    empezarRespuesta = empezarRespuesta,
-                    empezarSecuencia = empezarSecuencia,
-                    secuenciaCompleta = secuenciaCompleta,
-                    setColorSecuenciaActual = {colorSecuenciaActual = it},
-                    setEmpezarRespuesta = {empezarRespuesta = it},
-                    setQuienDice = {quienDice = it},
-                    setSecuenciaCompleta = {secuenciaCompleta = it}
-                )
-                MiBoton(
-                    miModelView = miModelView,
-                    color = Colores.VERDE,
-                    empezarRespuesta = empezarRespuesta,
-                    empezarSecuencia = empezarSecuencia,
-                    secuenciaCompleta = secuenciaCompleta,
-                    setColorSecuenciaActual = {colorSecuenciaActual = it},
-                    setEmpezarRespuesta = {empezarRespuesta = it},
-                    setQuienDice = {quienDice = it},
-                    setSecuenciaCompleta = {secuenciaCompleta = it}
-                )
+                CrearMiBoton(Colores.AZUL)
+                CrearMiBoton(Colores.VERDE)
             }
-
             Column {
-                MiBoton(
-                    miModelView = miModelView,
-                    color = Colores.ROJO,
-                    empezarRespuesta = empezarRespuesta,
-                    empezarSecuencia = empezarSecuencia,
-                    secuenciaCompleta = secuenciaCompleta,
-                    setColorSecuenciaActual = {colorSecuenciaActual = it},
-                    setEmpezarRespuesta = {empezarRespuesta = it},
-                    setQuienDice = {quienDice = it},
-                    setSecuenciaCompleta = {secuenciaCompleta = it}
-                )
-                MiBoton(
-                    miModelView = miModelView,
-                    color = Colores.AMARILLO,
-                    empezarRespuesta = empezarRespuesta,
-                    empezarSecuencia = empezarSecuencia,
-                    secuenciaCompleta = secuenciaCompleta,
-                    setColorSecuenciaActual = {colorSecuenciaActual = it},
-                    setEmpezarRespuesta = {empezarRespuesta = it},
-                    setQuienDice = {quienDice = it},
-                    setSecuenciaCompleta = {secuenciaCompleta = it}
-                )
+                CrearMiBoton(Colores.ROJO)
+                CrearMiBoton(Colores.AMARILLO)
             }
         }
 
