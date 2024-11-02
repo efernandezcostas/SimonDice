@@ -29,7 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.simondice.ui.theme.SimonDiceTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Crea un botón con un color y un texto
@@ -54,6 +57,7 @@ fun MiBoton(
     setSecuenciaCompleta: (Boolean) -> Unit,
     setColorSecuenciaActual: (Color) -> Unit,
     setQuienDice: (String) -> Unit,
+    setTextoPartida: (String) -> Unit
 ) {
     return Button(
         onClick = {
@@ -65,14 +69,16 @@ fun MiBoton(
                 setColorSecuenciaActual(color.color)
                 setEmpezarRespuesta(true)
 
+
                 var secuenciaCompletaLocal = false
                 var respuestaCorrecta = miModelView.respuestaUsuario(color, setSecuenciaCompletaLocal = {secuenciaCompletaLocal = it})
 
                 if (!respuestaCorrecta) {
-                    setQuienDice("Has perdido")
+                    setQuienDice("¡Has perdido en la ronda ${Datos.ronda}!")
+                    setTextoPartida("Nueva partida")
                     miModelView.nuevaPartida()
                 } else if (secuenciaCompletaLocal) {
-                    setQuienDice("Siguiente ronda")
+                    setQuienDice("¡Ronda ${Datos.ronda} superada!")
                     setSecuenciaCompleta(true)
                 }
             }
@@ -96,6 +102,7 @@ fun MiBoton(
 @Composable
 fun UI(miModelView: ModelView) {
     var quienDice by remember { mutableStateOf("Simón Dice") }
+    var textoPartida by remember { mutableStateOf("Nueva partida") }
     var colorSecuenciaActual by remember { mutableStateOf(Color.White) }
 
     var empezarRespuesta by remember { mutableStateOf(false) }
@@ -117,7 +124,8 @@ fun UI(miModelView: ModelView) {
             secuenciaCompleta = secuenciaCompleta,
             setColorSecuenciaActual = { colorSecuenciaActual = it },
             setQuienDice = { quienDice = it },
-            setSecuenciaCompleta = { secuenciaCompleta = it }
+            setSecuenciaCompleta = { secuenciaCompleta = it },
+            setTextoPartida = { textoPartida = it },
         )
     }
 
@@ -192,9 +200,17 @@ fun UI(miModelView: ModelView) {
                 onClick = {
                     if (!empezarSecuencia && !empezarRespuesta) {
                         if (Datos.secuenciaMaquina.isNotEmpty() && !secuenciaCompleta) {
-                            quienDice = "Faltan colores"
+                            quienDice = "¡Faltan colores!"
+
+                            /*
+                            CoroutineScope(Dispatchers.Main).launch {
+                                delay(1000)
+                                quienDice = "Tú Dices"
+                            }*/
+
                         } else {
                             miModelView.nuevaRonda()
+                            textoPartida = "Siguiente ronda"
                             empezarSecuencia = true
                             secuenciaCompleta = false
                             Log.d("Secuencia", Datos.secuenciaMaquina.toString() + " - " + Datos.secuenciaUsuario.toString())
@@ -211,7 +227,7 @@ fun UI(miModelView: ModelView) {
                 shape = RoundedCornerShape(10.dp),
             ) {
                 Text(
-                    text = "Empezar",
+                    text = textoPartida,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium
                 )

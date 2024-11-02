@@ -17,6 +17,7 @@ class ModelView: ViewModel() {
             4 -> Datos.secuenciaMaquina.add(Colores.AMARILLO)
         }
         Datos.secuenciaUsuario.clear()
+        Datos.ronda++
     }
 
 
@@ -39,5 +40,6 @@ class ModelView: ViewModel() {
      */
     fun nuevaPartida(){
         Datos.secuenciaMaquina.clear()
+        Datos.ronda = 0
     }
 }

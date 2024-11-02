@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 object Datos {
     var numero = 0
+    var ronda = 0
     var secuenciaMaquina = mutableListOf<Colores>()
     var secuenciaUsuario = mutableListOf<Colores>()
 }
