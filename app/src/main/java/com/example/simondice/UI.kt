@@ -61,14 +61,13 @@ fun MiBoton(
 ) {
     return Button(
         onClick = {
-            if (!empezarSecuencia
-                && !empezarRespuesta
-                && !secuenciaCompleta
-                && Datos.secuenciaMaquina.isNotEmpty()
+            if (!empezarSecuencia                           // impide que se pulse un nuevo color mientras se muestra la secuencia de la máquina
+                && !empezarRespuesta                        // impide que se pulse un nuevo color mientras se muestra la secuencia del usuario
+                && !secuenciaCompleta                       // impide que se pulse un nuevo color cuando la secuencia está completa (ronda terminada)
+                && Datos.secuenciaMaquina.isNotEmpty()      // impide que se pulse un nuevo color cuando la secuencia de la máquina está vacía (Antes de nueva partida)
             ){
                 setColorSecuenciaActual(color.color)
                 setEmpezarRespuesta(true)
-
 
                 var secuenciaCompletaLocal = false
                 var respuestaCorrecta = miModelView.respuestaUsuario(color, setSecuenciaCompletaLocal = {secuenciaCompletaLocal = it})
@@ -110,7 +109,7 @@ fun UI(miModelView: ModelView) {
     var secuenciaCompleta by remember { mutableStateOf(true) }
 
     /**
-     * Crea un botón con un color utillizando la función [MiBoton]
+     * Crea un botón con un color utilizando la función [MiBoton]
      * @param color Color del botón
      */
     @Composable
@@ -129,6 +128,9 @@ fun UI(miModelView: ModelView) {
         )
     }
 
+    /*
+        Se lanza cuando cambia el valor de empezarSecuencia. Si el nuevo valor es true, se muestra la secuencia de la máquina
+     */
     LaunchedEffect(empezarSecuencia) {
         if (empezarSecuencia) {
             quienDice = "Simón Dice"

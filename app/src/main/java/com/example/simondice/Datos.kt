@@ -2,6 +2,9 @@ package com.example.simondice
 
 import androidx.compose.ui.graphics.Color
 
+/**
+ * Objeto singleton que contiene los datos de la partida
+ */
 object Datos {
     var numero = 0
     var ronda = 0
@@ -9,6 +12,9 @@ object Datos {
     var secuenciaUsuario = mutableListOf<Colores>()
 }
 
+/**
+ * Enum de constantes que representan los colores del juego
+ */
 enum class Colores (val color: Color, val nombre: String){
     AZUL(Color(25, 25, 194, 255), "AZUL"),
     ROJO(Color(199, 37, 37, 255), "ROJO"),
