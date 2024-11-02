@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 class ModelView: ViewModel() {
 
     /**
-     * Inicia una nueva ronda
+     * Genera un número aleatorio y añade el color correspondiente a la secuencia de la máquina
      */
     fun nuevaRonda(){
         Datos.numero = (1..4).random()
@@ -19,8 +19,12 @@ class ModelView: ViewModel() {
         Datos.secuenciaUsuario.clear()
     }
 
+
     /**
-     * Añade el color seleccionado por el usuario a la secuencia del usuario
+     * Compara el color seleccionado por el usuario con el color de la secuencia de la máquina
+     * @param color Color seleccionado por el usuario
+     * @param setSecuenciaCompletaLocal Función que indica si la secuencia del usuario está completa
+     * @return true si el color seleccionado por el usuario es correcto, false en caso contrario
      */
     fun respuestaUsuario(color: Colores, setSecuenciaCompletaLocal: (Boolean) -> Unit): Boolean {
         Datos.secuenciaUsuario.add(color)
@@ -30,6 +34,9 @@ class ModelView: ViewModel() {
         return Datos.secuenciaUsuario.last() == Datos.secuenciaMaquina[Datos.secuenciaUsuario.size - 1]
     }
 
+    /**
+     * Limpia la secuencia de la máquina
+     */
     fun nuevaPartida(){
         Datos.secuenciaMaquina.clear()
     }
