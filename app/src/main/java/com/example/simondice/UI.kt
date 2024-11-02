@@ -70,7 +70,7 @@ fun MiBoton(
                 setEmpezarRespuesta(true)
 
                 var secuenciaCompletaLocal = false
-                var respuestaCorrecta = miModelView.respuestaUsuario(color, setSecuenciaCompletaLocal = {secuenciaCompletaLocal = it})
+                var respuestaCorrecta = miModelView.respuestaUsuario(color) { secuenciaCompletaLocal = it }         // Utiliza lambda para el parámetro setSecuenciaCompletaLocal al ser la última variable
 
                 if (!respuestaCorrecta) {
                     setQuienDice("¡Has perdido en la ronda ${Datos.ronda}!")
