@@ -1,6 +1,5 @@
 package com.example.simondice
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -29,10 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.simondice.ui.theme.SimonDiceTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * Crea un botón con un color y un texto
@@ -70,7 +66,7 @@ fun MiBoton(
                 setEmpezarRespuesta(true)
 
                 var secuenciaCompletaLocal = false
-                var respuestaCorrecta = miModelView.respuestaUsuario(color) { secuenciaCompletaLocal = it }         // Utiliza lambda para el parámetro setSecuenciaCompletaLocal al ser la última variable
+                val respuestaCorrecta = miModelView.addASecuenciaUser(color) { secuenciaCompletaLocal = it }         // Utiliza lambda para el parámetro setSecuenciaCompletaLocal al ser la última variable
 
                 if (!respuestaCorrecta) {
                     setQuienDice("¡Has perdido en la ronda ${Datos.ronda}!")
@@ -81,7 +77,6 @@ fun MiBoton(
                     setSecuenciaCompleta(true)
                 }
             }
-            Log.d("Secuencia", Datos.secuenciaMaquina.toString()+" - "+Datos.secuenciaUsuario.toString())
 
         },
         modifier = Modifier
@@ -144,7 +139,6 @@ fun UI(miModelView: ModelView) {
             colorSecuenciaActual = Color.White
 
             quienDice = "Tú Dices"
-
             empezarSecuencia = false
         }
     }
@@ -203,19 +197,11 @@ fun UI(miModelView: ModelView) {
                     if (!empezarSecuencia && !empezarRespuesta) {
                         if (Datos.secuenciaMaquina.isNotEmpty() && !secuenciaCompleta) {
                             quienDice = "¡Faltan colores!"
-
-                            /*
-                            CoroutineScope(Dispatchers.Main).launch {
-                                delay(1000)
-                                quienDice = "Tú Dices"
-                            }*/
-
                         } else {
-                            miModelView.nuevaRonda()
+                            miModelView.generarRandom()
                             textoPartida = "Siguiente ronda"
                             empezarSecuencia = true
                             secuenciaCompleta = false
-                            Log.d("Secuencia", Datos.secuenciaMaquina.toString() + " - " + Datos.secuenciaUsuario.toString())
                         }
                     }
                 },
