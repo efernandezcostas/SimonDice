@@ -36,8 +36,12 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun BotonColor(miModelView: ModelView, color: Colores, mostrarColorPulsado: (Colores) -> Unit) {
-
+fun BotonColor(
+    miModelView: ModelView,
+    color: Colores,
+    mostrarColorPulsado: (Colores) -> Unit,
+    setTextoPartida: (String) -> Unit
+) {
     var _boton by remember { mutableStateOf(miModelView.estadoLiveData.value!!.boton_color) }
     miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
         _boton = miModelView.estadoLiveData.value!!.boton_color
@@ -46,7 +50,7 @@ fun BotonColor(miModelView: ModelView, color: Colores, mostrarColorPulsado: (Col
     Button(
         enabled = _boton,
         onClick = {
-            miModelView.addASecuenciaUser(color)
+            miModelView.addASecuenciaUser(color, setTextoPartida)
             mostrarColorPulsado(color)
         },
         colors = ButtonDefaults.buttonColors(containerColor = color.color),
@@ -64,8 +68,10 @@ fun BotonColor(miModelView: ModelView, color: Colores, mostrarColorPulsado: (Col
 }
 
 @Composable
-fun BotonStart(miModelView: ModelView){
-
+fun BotonStart(
+    miModelView: ModelView,
+    textoPartida: String
+) {
     var _start by remember { mutableStateOf(miModelView.estadoLiveData.value!!.boton_start) }
     miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
         _start = miModelView.estadoLiveData.value!!.boton_start
@@ -86,7 +92,7 @@ fun BotonStart(miModelView: ModelView){
         shape = RoundedCornerShape(10.dp)
     ) {
         Text(
-            text = "Nueva partida",
+            text = textoPartida,
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium
         )
@@ -118,7 +124,7 @@ fun UI(miModelView: ModelView) {
 
     @Composable
     fun CrearBotonColor(color: Colores){
-        BotonColor(miModelView, color, ::mostrarColorPulsado)
+        BotonColor(miModelView, color, ::mostrarColorPulsado, setTextoPartida = {textoPartida = it})
     }
 
     LaunchedEffect(_estado) {
@@ -134,7 +140,6 @@ fun UI(miModelView: ModelView) {
             miModelView.estadoLiveData.value = Estados.RESPONDIENDO
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -175,7 +180,7 @@ fun UI(miModelView: ModelView) {
         Spacer(modifier = Modifier.weight(1f))
 
         Row {
-            BotonStart(miModelView)
+            BotonStart(miModelView, textoPartida)
         }
     }
 }
