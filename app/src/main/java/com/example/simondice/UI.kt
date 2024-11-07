@@ -48,10 +48,12 @@ fun BotonColor(
     }
 
     Button(
-        enabled = _boton,
+        //enabled = _boton,
         onClick = {
-            miModelView.addASecuenciaUser(color, setTextoPartida)
-            mostrarColorPulsado(color)
+            if (_boton) {
+                miModelView.addASecuenciaUser(color, setTextoPartida)
+                mostrarColorPulsado(color)
+            }
         },
         colors = ButtonDefaults.buttonColors(containerColor = color.color),
         modifier = Modifier
@@ -78,9 +80,11 @@ fun BotonStart(
     }
 
     Button(
-        enabled = _start,
+        //enabled = _start,
         onClick = {
-            miModelView.generarRandom()
+            if (_start) {
+                miModelView.generarRandom()
+            }
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White,
