@@ -23,67 +23,37 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.simondice.ui.theme.SimonDiceTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-/**
- * Crea un botón con un color y un texto
- * @param miModelView Modelo de la vista
- * @param color Color del botón
- * @param empezarRespuesta Indica si se ha empezado la respuesta del usuario
- * @param setEmpezarRespuesta Función que cambia el valor de empezarRespuesta
- * @param empezarSecuencia Indica si se ha empezado la secuencia de la máquina
- * @param secuenciaCompleta Indica si la secuencia del usuario está completa
- * @param setSecuenciaCompleta Función que cambia el valor de secuenciaCompleta
- * @param setColorSecuenciaActual Función que cambia el color de la secuencia actual
- * @param setQuienDice Función que cambia el texto de quien dice
- */
+
 @Composable
-fun MiBoton(
-    miModelView: ModelView,
-    color: Colores,
-    empezarRespuesta: Boolean,
-    setEmpezarRespuesta: (Boolean) -> Unit,
-    empezarSecuencia: Boolean,
-    secuenciaCompleta: Boolean,
-    setSecuenciaCompleta: (Boolean) -> Unit,
-    setColorSecuenciaActual: (Color) -> Unit,
-    setQuienDice: (String) -> Unit,
-    setTextoPartida: (String) -> Unit
-) {
-    return Button(
+fun BotonColor(miModelView: ModelView, color: Colores, mostrarColorPulsado: (Colores) -> Unit) {
+
+    var _boton by remember { mutableStateOf(miModelView.estadoLiveData.value!!.boton_color) }
+    miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
+        _boton = miModelView.estadoLiveData.value!!.boton_color
+    }
+
+    Button(
+        enabled = _boton,
         onClick = {
-            if (!empezarSecuencia                           // impide que se pulse un nuevo color mientras se muestra la secuencia de la máquina
-                && !empezarRespuesta                        // impide que se pulse un nuevo color mientras se muestra la secuencia del usuario
-                && !secuenciaCompleta                       // impide que se pulse un nuevo color cuando la secuencia está completa (ronda terminada)
-                && Datos.secuenciaMaquina.isNotEmpty()      // impide que se pulse un nuevo color cuando la secuencia de la máquina está vacía (Antes de nueva partida)
-            ){
-                setColorSecuenciaActual(color.color)
-                setEmpezarRespuesta(true)
-
-                var secuenciaCompletaLocal = false
-                val respuestaCorrecta = miModelView.addASecuenciaUser(color) { secuenciaCompletaLocal = it }         // Utiliza lambda para el parámetro setSecuenciaCompletaLocal al ser la última variable
-
-                if (!respuestaCorrecta) {
-                    setQuienDice("¡Has perdido en la ronda ${Datos.ronda}!")
-                    setTextoPartida("Nueva partida")
-                    miModelView.nuevaPartida()
-                } else if (secuenciaCompletaLocal) {
-                    setQuienDice("¡Ronda ${Datos.ronda} superada!")
-                    setSecuenciaCompleta(true)
-                }
-            }
-
+            miModelView.addASecuenciaUser(color)
+            mostrarColorPulsado(color)
         },
+        colors = ButtonDefaults.buttonColors(containerColor = color.color),
         modifier = Modifier
             .padding(10.dp, 10.dp)
             .size(160.dp, 200.dp),
-        shape = RoundedCornerShape(10.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = color.color)
+        shape = RoundedCornerShape(10.dp)
     ) {
         Text(
             text = color.nombre,
@@ -94,42 +64,65 @@ fun MiBoton(
 }
 
 @Composable
+fun BotonStart(miModelView: ModelView){
+
+    var _start by remember { mutableStateOf(miModelView.estadoLiveData.value!!.boton_start) }
+    miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
+        _start = miModelView.estadoLiveData.value!!.boton_start
+    }
+
+    Button(
+        enabled = _start,
+        onClick = {
+            miModelView.generarRandom()
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.White,
+            contentColor = Color.Black
+        ),
+        modifier = Modifier
+            .border(color = Color.Black, width = 1.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Text(
+            text = "Nueva partida",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@Composable
 fun UI(miModelView: ModelView) {
-    var quienDice by remember { mutableStateOf("Simón Dice") }
     var textoPartida by remember { mutableStateOf("Nueva partida") }
     var colorSecuenciaActual by remember { mutableStateOf(Color.White) }
 
-    var empezarRespuesta by remember { mutableStateOf(false) }
-    var empezarSecuencia by remember { mutableStateOf(false) }
-    var secuenciaCompleta by remember { mutableStateOf(true) }
-
-    /**
-     * Crea un botón con un color utilizando la función [MiBoton]
-     * @param color Color del botón
-     */
-    @Composable
-    fun CrearMiBoton(color: Colores) {
-        MiBoton(
-            miModelView = miModelView,
-            color = color,
-            empezarRespuesta = empezarRespuesta,
-            setEmpezarRespuesta = { empezarRespuesta = it },
-            empezarSecuencia = empezarSecuencia,
-            secuenciaCompleta = secuenciaCompleta,
-            setColorSecuenciaActual = { colorSecuenciaActual = it },
-            setQuienDice = { quienDice = it },
-            setSecuenciaCompleta = { secuenciaCompleta = it },
-            setTextoPartida = { textoPartida = it },
-        )
+    var _estado by remember { mutableStateOf(miModelView.estadoLiveData.value) }
+    miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
+        _estado = miModelView.estadoLiveData.value
     }
 
-    /*
-        Se lanza cuando cambia el valor de empezarSecuencia. Si el nuevo valor es true, se muestra la secuencia de la máquina
-     */
-    LaunchedEffect(empezarSecuencia) {
-        if (empezarSecuencia) {
-            quienDice = "Simón Dice"
+    var _texto by remember { mutableStateOf(miModelView.estadoLiveData.value!!.texto) }
+    miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
+        _texto = miModelView.estadoLiveData.value!!.texto
+    }
 
+    fun mostrarColorPulsado(color: Colores){
+        colorSecuenciaActual = color.color
+        CoroutineScope(Dispatchers.Default).launch {
+            delay(150)
+            colorSecuenciaActual = Color.White
+        }
+    }
+
+    @Composable
+    fun CrearBotonColor(color: Colores){
+        BotonColor(miModelView, color, ::mostrarColorPulsado)
+    }
+
+    LaunchedEffect(_estado) {
+        if (_estado == Estados.GENERANDO) {
             for (color in Datos.secuenciaMaquina) {
                 colorSecuenciaActual = color.color
                 delay(1000)
@@ -138,18 +131,10 @@ fun UI(miModelView: ModelView) {
             }
             colorSecuenciaActual = Color.White
 
-            quienDice = "Tú Dices"
-            empezarSecuencia = false
+            miModelView.estadoLiveData.value = Estados.RESPONDIENDO
         }
     }
 
-    LaunchedEffect(empezarRespuesta) {
-        if (empezarRespuesta) {
-            delay(300)
-            colorSecuenciaActual = Color.White
-            empezarRespuesta = false
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -168,7 +153,7 @@ fun UI(miModelView: ModelView) {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = quienDice,
+                text = _texto,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -178,48 +163,19 @@ fun UI(miModelView: ModelView) {
 
         Row {
             Column {
-                CrearMiBoton(Colores.AZUL)
-                CrearMiBoton(Colores.VERDE)
+                CrearBotonColor(Colores.AZUL)
+                CrearBotonColor(Colores.VERDE)
             }
             Column {
-                CrearMiBoton(Colores.ROJO)
-                CrearMiBoton(Colores.AMARILLO)
+                CrearBotonColor(Colores.ROJO)
+                CrearBotonColor(Colores.AMARILLO)
             }
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-
         Row {
-            /* Botón de empezar */
-            Button(
-                onClick = {
-                    if (!empezarSecuencia && !empezarRespuesta) {
-                        if (Datos.secuenciaMaquina.isNotEmpty() && !secuenciaCompleta) {
-                            quienDice = "¡Faltan colores!"
-                        } else {
-                            miModelView.generarRandom()
-                            textoPartida = "Siguiente ronda"
-                            empezarSecuencia = true
-                            secuenciaCompleta = false
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .border(color = Color.Black, width = 1.dp)
-                    .fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color.Black
-                ),
-                shape = RoundedCornerShape(10.dp),
-            ) {
-                Text(
-                    text = textoPartida,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
+            BotonStart(miModelView)
         }
     }
 }
