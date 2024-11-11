@@ -17,14 +17,14 @@ enum class Colores (var color: Color, var nombre: String){
 
 }
 
-enum class Estados (var boton_start: Boolean, var boton_color: Boolean, var texto: String){
-    INICIO(boton_start = true, boton_color = false, texto = "Bienvenido a Simón Dice"),
-    GENERANDO(boton_start = false, boton_color = false, texto = "Simón Dice"),
-    RESPONDIENDO(boton_start = false, boton_color = true, texto = "Tú Dices"),
+enum class Estados (var botonStart: Boolean, var botonColor: Boolean, var texto: String){
+    INICIO(botonStart = true, botonColor = false, texto = "Bienvenido a Simón Dice"),
+    GENERANDO(botonStart = false, botonColor = false, texto = "Simón Dice"),
+    RESPONDIENDO(botonStart = false, botonColor = true, texto = "Tú Dices"),
 }
 
-enum class EstadosAuxiliares (var texto: String){
-    AUX1("aux1"),
-    AUX2("aux2"),
-    AUX3("aux3"),
+enum class EstadosAuxiliares {
+    AUX1,
+    AUX2,
+    AUX3,
 }

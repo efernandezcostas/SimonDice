@@ -64,13 +64,13 @@ class ModelView: ViewModel() {
         viewModelScope.launch {
             var estadoAuxiliar = EstadosAuxiliares.AUX1
 
-            Log.d("propio", "estado (coroutina): ${estadoAuxiliar}")
+            Log.d("propio", "estado (coroutine): $estadoAuxiliar")
             estadoAuxiliar = EstadosAuxiliares.AUX2
             delay(1500)
-            Log.d("propio", "estado (coroutina): ${estadoAuxiliar}")
+            Log.d("propio", "estado (coroutine): $estadoAuxiliar")
             delay(1500)
             estadoAuxiliar = EstadosAuxiliares.AUX3
-            Log.d("propio", "estado (coroutina): ${estadoAuxiliar}")
+            Log.d("propio", "estado (coroutine): $estadoAuxiliar")
             delay(1500)
         }
     }

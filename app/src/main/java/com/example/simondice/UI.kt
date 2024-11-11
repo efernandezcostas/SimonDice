@@ -42,15 +42,15 @@ fun BotonColor(
     mostrarColorPulsado: (Colores) -> Unit,
     setTextoPartida: (String) -> Unit
 ) {
-    var _boton by remember { mutableStateOf(miModelView.estadoLiveData.value!!.boton_color) }
+    var estadoBoton by remember { mutableStateOf(miModelView.estadoLiveData.value!!.botonColor) }
     miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
-        _boton = miModelView.estadoLiveData.value!!.boton_color
+        estadoBoton = miModelView.estadoLiveData.value!!.botonColor
     }
 
     Button(
         //enabled = _boton,
         onClick = {
-            if (_boton) {
+            if (estadoBoton) {
                 miModelView.addASecuenciaUser(color, setTextoPartida)
                 mostrarColorPulsado(color)
             }
@@ -74,32 +74,32 @@ fun BotonStart(
     miModelView: ModelView,
     textoPartida: String
 ) {
-    var _start by remember { mutableStateOf(miModelView.estadoLiveData.value!!.boton_start) }
+    var estadoStart by remember { mutableStateOf(miModelView.estadoLiveData.value!!.botonStart) }
     miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
-        _start = miModelView.estadoLiveData.value!!.boton_start
+        estadoStart = miModelView.estadoLiveData.value!!.botonStart
     }
 
-    var _color by remember { mutableStateOf(Color.White) }
+    var colorStart by remember { mutableStateOf(Color.White) }
 
-    LaunchedEffect(_start) {
-        while(_start){
-            _color = Color.LightGray
+    LaunchedEffect(estadoStart) {
+        while(estadoStart){
+            colorStart = Color.LightGray
             delay(200)
-            _color = Color.White
+            colorStart = Color.White
             delay(1000)
         }
-        _color = Color.White
+        colorStart = Color.White
     }
 
     Button(
         //enabled = _start,
         onClick = {
-            if (_start) {
+            if (estadoStart) {
                 miModelView.generarRandom()
             }
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = _color,
+            containerColor = colorStart,
             contentColor = Color.Black
         ),
         modifier = Modifier
@@ -120,14 +120,14 @@ fun UI(miModelView: ModelView) {
     var textoPartida by remember { mutableStateOf("Nueva partida") }
     var colorSecuenciaActual by remember { mutableStateOf(Color.White) }
 
-    var _estado by remember { mutableStateOf(miModelView.estadoLiveData.value) }
+    var estado by remember { mutableStateOf(miModelView.estadoLiveData.value) }
     miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
-        _estado = miModelView.estadoLiveData.value
+        estado = miModelView.estadoLiveData.value
     }
 
-    var _texto by remember { mutableStateOf(miModelView.estadoLiveData.value!!.texto) }
+    var estadoTexto by remember { mutableStateOf(miModelView.estadoLiveData.value!!.texto) }
     miModelView.estadoLiveData.observe(LocalLifecycleOwner.current){
-        _texto = miModelView.estadoLiveData.value!!.texto
+        estadoTexto = miModelView.estadoLiveData.value!!.texto
     }
 
     fun mostrarColorPulsado(color: Colores){
@@ -143,8 +143,8 @@ fun UI(miModelView: ModelView) {
         BotonColor(miModelView, color, ::mostrarColorPulsado, setTextoPartida = {textoPartida = it})
     }
 
-    LaunchedEffect(_estado) {
-        if (_estado == Estados.GENERANDO) {
+    LaunchedEffect(estado) {
+        if (estado == Estados.GENERANDO) {
             for (color in Datos.secuenciaMaquina) {
                 colorSecuenciaActual = color.color
                 delay(1000)
@@ -174,7 +174,7 @@ fun UI(miModelView: ModelView) {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = _texto,
+                text = estadoTexto,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium
             )
