@@ -22,3 +22,9 @@ enum class Estados (var boton_start: Boolean, var boton_color: Boolean, var text
     GENERANDO(boton_start = false, boton_color = false, texto = "Simón Dice"),
     RESPONDIENDO(boton_start = false, boton_color = true, texto = "Tú Dices"),
 }
+
+enum class EstadosAuxiliares (var texto: String){
+    AUX1("aux1"),
+    AUX2("aux2"),
+    AUX3("aux3"),
+}

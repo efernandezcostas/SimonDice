@@ -79,6 +79,18 @@ fun BotonStart(
         _start = miModelView.estadoLiveData.value!!.boton_start
     }
 
+    var _color by remember { mutableStateOf(Color.White) }
+
+    LaunchedEffect(_start) {
+        while(_start){
+            delay(400)
+            _color = Color.Gray
+            delay(400)
+            _color = Color.White
+        }
+        _color = Color.White
+    }
+
     Button(
         //enabled = _start,
         onClick = {
@@ -87,7 +99,7 @@ fun BotonStart(
             }
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
+            containerColor = _color,
             contentColor = Color.Black
         ),
         modifier = Modifier

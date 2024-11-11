@@ -3,6 +3,9 @@ package com.example.simondice
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ModelView: ViewModel() {
     val estadoLiveData: MutableLiveData<Estados> = MutableLiveData(Estados.INICIO)
@@ -39,6 +42,8 @@ class ModelView: ViewModel() {
     private fun comprobarIndices(): Boolean {
         Log.d("Propio", "${Datos.secuenciaMaquina} - ${Datos.secuenciaUsuario}")
 
+        estadosAuxiliares()
+
         if (Datos.secuenciaMaquina[Datos.secuenciaUsuario.size-1] == Datos.secuenciaUsuario.last()) {
             if (Datos.secuenciaMaquina.size == Datos.secuenciaUsuario.size){
                 estadoLiveData.value = Estados.INICIO.apply { texto = "¡Has superado la ronda ${Datos.ronda}!" }
@@ -53,5 +58,20 @@ class ModelView: ViewModel() {
             return false
         }
         return true
+    }
+
+    private fun estadosAuxiliares(){
+        viewModelScope.launch {
+            var estadoAuxiliar = EstadosAuxiliares.AUX1
+
+            Log.d("propio", "estado (coroutina): ${estadoAuxiliar}")
+            estadoAuxiliar = EstadosAuxiliares.AUX2
+            delay(1500)
+            Log.d("propio", "estado (coroutina): ${estadoAuxiliar}")
+            delay(1500)
+            estadoAuxiliar = EstadosAuxiliares.AUX3
+            Log.d("propio", "estado (coroutina): ${estadoAuxiliar}")
+            delay(1500)
+        }
     }
 }
