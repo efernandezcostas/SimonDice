@@ -83,10 +83,10 @@ fun BotonStart(
 
     LaunchedEffect(_start) {
         while(_start){
-            delay(400)
-            _color = Color.Gray
-            delay(400)
+            _color = Color.LightGray
+            delay(200)
             _color = Color.White
+            delay(1000)
         }
         _color = Color.White
     }
