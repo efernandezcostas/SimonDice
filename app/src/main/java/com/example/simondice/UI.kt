@@ -34,7 +34,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
+/**
+ * Composable para crear los botones de colores
+ */
 @Composable
 fun BotonColor(
     miModelView: ModelView,
@@ -69,6 +71,9 @@ fun BotonColor(
     }
 }
 
+/**
+ * Composable para crear el botón de start
+ */
 @Composable
 fun BotonStart(
     miModelView: ModelView,
@@ -81,6 +86,9 @@ fun BotonStart(
 
     var colorStart by remember { mutableStateOf(Color.White) }
 
+    /**
+     *  Launched effect que hace que el botón start parpadee
+     */
     LaunchedEffect(estadoStart) {
         while(estadoStart){
             colorStart = Color.LightGray
@@ -115,6 +123,9 @@ fun BotonStart(
     }
 }
 
+/**
+ * Composable que contiene la interfaz gráfica de la aplicación
+ */
 @Composable
 fun UI(miModelView: ModelView) {
     var textoPartida by remember { mutableStateOf("Nueva partida") }
@@ -130,6 +141,9 @@ fun UI(miModelView: ModelView) {
         estadoTexto = miModelView.estadoLiveData.value!!.texto
     }
 
+    /**
+     * Función que muestra el color pulsado durante 150 ms
+     */
     fun mostrarColorPulsado(color: Colores){
         colorSecuenciaActual = color.color
         CoroutineScope(Dispatchers.Default).launch {
@@ -138,11 +152,17 @@ fun UI(miModelView: ModelView) {
         }
     }
 
+    /**
+     * Función que crea un botón de color
+     */
     @Composable
     fun CrearBotonColor(color: Colores){
         BotonColor(miModelView, color, ::mostrarColorPulsado, setTextoPartida = {textoPartida = it})
     }
 
+    /**
+     * Launched effect que muestra la secuencia de la máquina
+     */
     LaunchedEffect(estado) {
         if (estado == Estados.GENERANDO) {
             for (color in Datos.secuenciaMaquina) {

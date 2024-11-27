@@ -7,9 +7,18 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Clase que contiene la lógica de la aplicación
+ */
 class ModelView: ViewModel() {
+    /**
+     * LiveData que contiene el estado de la aplicación
+     */
     val estadoLiveData: MutableLiveData<Estados> = MutableLiveData(Estados.INICIO)
 
+    /**
+     * Función que genera un número aleatorio y cambia el estado de la aplicación a GENERANDO
+     */
     fun generarRandom(){
         estadoLiveData.value = Estados.GENERANDO
         Datos.numero = (1..4).random()
@@ -18,6 +27,9 @@ class ModelView: ViewModel() {
         Log.d("Propio", "Secuencia máquina: ${Datos.secuenciaMaquina}")
     }
 
+    /**
+     * Función que devuelve un color según el número aleatorio generado
+     */
     private fun colorSegunRandom(): Colores{
         return when(Datos.numero){
             1 -> Colores.AZUL
@@ -28,10 +40,16 @@ class ModelView: ViewModel() {
         }
     }
 
+    /**
+     * Función que añade un color a la secuencia de la máquina
+     */
     private fun addASecuencia(color: Colores){
         Datos.secuenciaMaquina.add(color)
     }
 
+    /**
+     * Función que añade un color a la secuencia del usuario
+     */
     fun addASecuenciaUser(color: Colores, setTextoPartida: (String) -> Unit){
         Datos.secuenciaUsuario.add(color)
         val botonAcertado = comprobarIndices()
@@ -39,6 +57,10 @@ class ModelView: ViewModel() {
         else setTextoPartida("Nueva partida")
     }
 
+    /**
+     * Función que comprueba si los índices de las secuencias de la máquina y del usuario son iguales,
+     * en caso de no serlo, se pierde la partida
+     */
     private fun comprobarIndices(): Boolean {
         Log.d("Propio", "${Datos.secuenciaMaquina} - ${Datos.secuenciaUsuario}")
 
@@ -60,6 +82,9 @@ class ModelView: ViewModel() {
         return true
     }
 
+    /**
+     * Función que contiene los estados auxiliares de la aplicación
+     */
     private fun estadosAuxiliares(){
         viewModelScope.launch {
             var estadoAuxiliar = EstadosAuxiliares.AUX1
